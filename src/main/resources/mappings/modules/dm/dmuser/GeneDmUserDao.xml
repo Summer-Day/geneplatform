@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.thinkgem.jeesite.modules.dm.dao.dmuser.GeneDmUserDao">
+    
+	<sql id="geneDmUserColumns">
+		a.id AS "id",
+		a.user_name AS "userName",
+		a.user_age AS "userAge",
+		a.user_tele AS "userTele",
+		a.tube_id AS "tubeId",
+		a.medical_history AS "medicalHistory",
+		a.create_by AS "createBy.id",
+		a.create_date AS "createDate",
+		a.update_by AS "updateBy.id",
+		a.update_date AS "updateDate",
+		a.remarks AS "remarks",
+		a.del_flag AS "delFlag"
+	</sql>
+	
+	<sql id="geneDmUserJoins">
+	</sql>
+    
+	<select id="get" resultType="GeneDmUser">
+		SELECT 
+			<include refid="geneDmUserColumns"/>
+		FROM gene_dm_user a
+		<include refid="geneDmUserJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="GeneDmUser">
+		SELECT 
+			<include refid="geneDmUserColumns"/>
+		FROM gene_dm_user a
+		<include refid="geneDmUserJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+			<if test="userName != null and userName != ''">
+				AND a.user_name LIKE 
+					<if test="dbName == 'oracle'">'%'||#{userName}||'%'</if>
+					<if test="dbName == 'mssql'">'%'+#{userName}+'%'</if>
+					<if test="dbName == 'mysql'">concat('%',#{userName},'%')</if>
+			</if>
+			<if test="userTele != null and userTele != ''">
+				AND a.user_tele = #{userTele}
+			</if>
+			<if test="tubeId != null and tubeId != ''">
+				AND a.tube_id LIKE 
+					<if test="dbName == 'oracle'">'%'||#{tubeId}||'%'</if>
+					<if test="dbName == 'mssql'">'%'+#{tubeId}+'%'</if>
+					<if test="dbName == 'mysql'">concat('%',#{tubeId},'%')</if>
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="GeneDmUser">
+		SELECT 
+			<include refid="geneDmUserColumns"/>
+		FROM gene_dm_user a
+		<include refid="geneDmUserJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO gene_dm_user(
+			id,
+			user_name,
+			user_age,
+			user_tele,
+			tube_id,
+			medical_history,
+			create_by,
+			create_date,
+			update_by,
+			update_date,
+			remarks,
+			del_flag
+		) VALUES (
+			#{id},
+			#{userName},
+			#{userAge},
+			#{userTele},
+			#{tubeId},
+			#{medicalHistory},
+			#{createBy.id},
+			#{createDate},
+			#{updateBy.id},
+			#{updateDate},
+			#{remarks},
+			#{delFlag}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE gene_dm_user SET 	
+			user_name = #{userName},
+			user_age = #{userAge},
+			user_tele = #{userTele},
+			tube_id = #{tubeId},
+			medical_history = #{medicalHistory},
+			update_by = #{updateBy.id},
+			update_date = #{updateDate},
+			remarks = #{remarks}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		UPDATE gene_dm_user SET 
+			del_flag = #{DEL_FLAG_DELETE}
+		WHERE id = #{id}
+	</update>
+	
+</mapper>
