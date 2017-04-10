@@ -3,6 +3,7 @@
  */
 package com.thinkgem.jeesite.modules.dm.entity.dmloci;
 
+import com.thinkgem.jeesite.common.utils.excel.annotation.ExcelField;
 import org.hibernate.validator.constraints.Length;
 
 import com.thinkgem.jeesite.common.persistence.DataEntity;
@@ -28,6 +29,7 @@ public class GeneDmLoci extends DataEntity<GeneDmLoci> {
 	}
 
 	@Length(min=1, max=100, message="基因位点长度必须介于 1 和 100 之间")
+	@ExcelField(title="位点")
 	public String getLoci() {
 		return loci;
 	}
@@ -37,6 +39,7 @@ public class GeneDmLoci extends DataEntity<GeneDmLoci> {
 	}
 	
 	@Length(min=1, max=64, message="基因类型长度必须介于 1 和 64 之间")
+	@ExcelField(title="基因类型")
 	public String getGeneType() {
 		return geneType;
 	}
@@ -46,6 +49,7 @@ public class GeneDmLoci extends DataEntity<GeneDmLoci> {
 	}
 	
 	@Length(min=1, max=100, message="试管编码长度必须介于 1 和 100 之间")
+	@ExcelField(title="试管编码")
 	public String getTubeId() {
 		return tubeId;
 	}
