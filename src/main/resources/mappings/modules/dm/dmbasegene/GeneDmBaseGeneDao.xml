@@ -1,0 +1,173 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.thinkgem.jeesite.modules.dm.dao.dmbasegene.GeneDmBaseGeneDao">
+    
+	<sql id="geneDmBaseGeneColumns">
+		a.id AS "id",
+		a.sickness AS "sickness",
+		a.gene_name AS "geneName",
+		a.gene_logogram AS "geneLogogram",
+		a.gene_loci AS "geneLoci",
+		a.gene_type AS "geneType",
+		a.gene_composite AS "geneComposite",
+		a.gene_type_flag AS "geneTypeFlag",
+		a.gene_literature AS "geneLiterature",
+		a.gene_rpn AS "geneRpn",
+		a.gene_correlation AS "geneCorrelation",
+		a.gene_health_suggest AS "geneHealthSuggest",
+		a.gene_medicine_suggest AS "geneMedicineSuggest",
+		a.gene_mechanism AS "geneMechanism",
+		a.gene_detection AS "geneDetection",
+		a.create_by AS "createBy.id",
+		a.create_date AS "createDate",
+		a.update_by AS "updateBy.id",
+		a.update_date AS "updateDate",
+		a.remarks AS "remarks",
+		a.del_flag AS "delFlag"
+	</sql>
+	
+	<sql id="geneDmBaseGeneJoins">
+	</sql>
+    
+	<select id="get" resultType="GeneDmBaseGene">
+		SELECT 
+			<include refid="geneDmBaseGeneColumns"/>
+		FROM gene_dm_base_gene a
+		<include refid="geneDmBaseGeneJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="GeneDmBaseGene">
+		SELECT 
+			<include refid="geneDmBaseGeneColumns"/>
+		FROM gene_dm_base_gene a
+		<include refid="geneDmBaseGeneJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+			<if test="sickness != null and sickness != ''">
+				AND a.sickness LIKE 
+					<if test="dbName == 'oracle'">'%'||#{sickness}||'%'</if>
+					<if test="dbName == 'mssql'">'%'+#{sickness}+'%'</if>
+					<if test="dbName == 'mysql'">concat('%',#{sickness},'%')</if>
+			</if>
+			<if test="geneLogogram != null and geneLogogram != ''">
+				AND a.gene_logogram LIKE 
+					<if test="dbName == 'oracle'">'%'||#{geneLogogram}||'%'</if>
+					<if test="dbName == 'mssql'">'%'+#{geneLogogram}+'%'</if>
+					<if test="dbName == 'mysql'">concat('%',#{geneLogogram},'%')</if>
+			</if>
+			<if test="geneLoci != null and geneLoci != ''">
+				AND a.gene_loci = #{geneLoci}
+			</if>
+			<if test="geneComposite != null and geneComposite != ''">
+				AND a.gene_composite LIKE 
+					<if test="dbName == 'oracle'">'%'||#{geneComposite}||'%'</if>
+					<if test="dbName == 'mssql'">'%'+#{geneComposite}+'%'</if>
+					<if test="dbName == 'mysql'">concat('%',#{geneComposite},'%')</if>
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="GeneDmBaseGene">
+		SELECT 
+			<include refid="geneDmBaseGeneColumns"/>
+		FROM gene_dm_base_gene a
+		<include refid="geneDmBaseGeneJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO gene_dm_base_gene(
+			id,
+			sickness,
+			gene_name,
+			gene_logogram,
+			gene_loci,
+			gene_type,
+			gene_composite,
+			gene_type_flag,
+			gene_literature,
+			gene_rpn,
+			gene_correlation,
+			gene_health_suggest,
+			gene_medicine_suggest,
+			gene_mechanism,
+			gene_detection,
+			create_by,
+			create_date,
+			update_by,
+			update_date,
+			remarks,
+			del_flag
+		) VALUES (
+			#{id},
+			#{sickness},
+			#{geneName},
+			#{geneLogogram},
+			#{geneLoci},
+			#{geneType},
+			#{geneComposite},
+			#{geneTypeFlag},
+			#{geneLiterature},
+			#{geneRpn},
+			#{geneCorrelation},
+			#{geneHealthSuggest},
+			#{geneMedicineSuggest},
+			#{geneMechanism},
+			#{geneDetection},
+			#{createBy.id},
+			#{createDate},
+			#{updateBy.id},
+			#{updateDate},
+			#{remarks},
+			#{delFlag}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE gene_dm_base_gene SET 	
+			sickness = #{sickness},
+			gene_name = #{geneName},
+			gene_logogram = #{geneLogogram},
+			gene_loci = #{geneLoci},
+			gene_type = #{geneType},
+			gene_composite = #{geneComposite},
+			gene_type_flag = #{geneTypeFlag},
+			gene_literature = #{geneLiterature},
+			gene_rpn = #{geneRpn},
+			gene_correlation = #{geneCorrelation},
+			gene_health_suggest = #{geneHealthSuggest},
+			gene_medicine_suggest = #{geneMedicineSuggest},
+			gene_mechanism = #{geneMechanism},
+			gene_detection = #{geneDetection},
+			update_by = #{updateBy.id},
+			update_date = #{updateDate},
+			remarks = #{remarks}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		UPDATE gene_dm_base_gene SET 
+			del_flag = #{DEL_FLAG_DELETE}
+		WHERE id = #{id}
+	</update>
+	
+</mapper>
