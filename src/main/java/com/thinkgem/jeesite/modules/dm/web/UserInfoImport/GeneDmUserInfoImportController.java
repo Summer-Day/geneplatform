@@ -65,12 +65,6 @@ public class GeneDmUserInfoImportController extends BaseController {
 //    @RequiresPermissions("dm:UserInfoImport:geneUserInfoImport:edit")
     @RequestMapping(value = "import", method = RequestMethod.POST)
     public String importFile(MultipartFile file, RedirectAttributes redirectAttributes) {
-        logger.debug(((CommonsMultipartFile) file).getStorageDescription());
-//		if(Global.isDemoMode()){
-//			addMessage(redirectAttributes, "演示模式，不允许操作！");
-//			return "redirect:" + adminPath + "/sys/user/list?repage";
-//		}
-
         try {
             int successNum = 0;
             int failureNum = 0;
@@ -103,7 +97,6 @@ public class GeneDmUserInfoImportController extends BaseController {
         } catch (Exception e) {
             addMessage(redirectAttributes, "导入用户失败！失败信息：" + e.getMessage());
         }
-//        return "redirect:" + adminPath + "/dm/dmloci/geneDmLoci/list?repage";
         return "redirect:" + adminPath + "/dm/UserInfoImport/geneUserInfoImport/list?repage";
     }
 }
