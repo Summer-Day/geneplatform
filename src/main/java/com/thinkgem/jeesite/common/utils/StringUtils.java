@@ -390,5 +390,30 @@ public class StringUtils extends org.apache.commons.lang3.StringUtils {
     	result.append(val.substring(1));
     	return result.toString();
     }
+
+	/**
+	 * 字符是否为空，有"null"的判断
+	 *
+	 * @param s 待测字符串
+	 * @return 如果字符串为空或者它的长度为零或者仅由空白字符(whitespace)组成时, 返回true;否则返回false
+	 */
+	public static boolean isEmpty(String s) {
+		if (s == null) {
+			return true;
+		}
+		s = s.trim();
+		return ((s.length() == 0) || s.equals("null"));
+	}
+
+	/**
+	 * 字符是否为空，有"null"的判断
+	 *
+	 * @param s
+	 * @return
+	 */
+	public static boolean notEmpty(String s) {
+		return !isEmpty(s);
+	}
+
     
 }

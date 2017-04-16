@@ -50,7 +50,8 @@ function _s() {
 				<%--<input id="file" name="file" type="file" onchange="_s()" />--%>
 			</div>
 			<br/>
-			<input id="textInput" name="textInput" type="text" />
+            <br/>
+			<input id="tubeId" name="tubeId" type="text" />
             <br/>
             <br/>
 			<input id="btnImportSubmit" style="padding-left:20px;text-align:center;" class="btn btn-primary" type="submit" value="   生    成   "/>
