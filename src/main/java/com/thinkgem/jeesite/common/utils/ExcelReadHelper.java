@@ -2,6 +2,7 @@ package com.thinkgem.jeesite.common.utils;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.IOException;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
@@ -11,6 +12,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.thinkgem.jeesite.common.utils.word.GeneWordReport;
 import com.thinkgem.jeesite.modules.dm.entity.dmloci.GeneDmLoci;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.Cell;
@@ -19,6 +21,11 @@ import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.ss.util.NumberToTextConverter;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import org.docx4j.bibliography.ObjectFactory;
+import org.docx4j.jaxb.Context;
+import org.docx4j.openpackaging.exceptions.InvalidFormatException;
+import org.docx4j.openpackaging.packages.WordprocessingMLPackage;
+import org.docx4j.wml.STBrType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -40,21 +47,97 @@ public class ExcelReadHelper {
      * @param args
      */
     public static void main(String args[]) {
-        System.out.println("Hello World!");
-        File dirFile = new File("/Users/wangshuo/geneWork/一期文档/20171390.xls");
-        if (!dirFile.exists()) {
-            logger.debug(" 目录不存在!");
-            return;
-        }
-        String aa[] = {"loci", "geneType", "tubeId"};
+
+
         try {
-            List list = excelRead(dirFile, aa, GeneDmLoci.class);
-            for (int i = 0; i < list.size(); i++) {
-                logger.debug(" ====>" + list.get(i).toString() + " <=======");
+            WordprocessingMLPackage wordMLPackage = null;
+            wordMLPackage = WordprocessingMLPackage.createPackage();
+            org.docx4j.wml.ObjectFactory factory = Context.getWmlObjectFactory();
+            GeneWordReport.alterStyleSheet(wordMLPackage);
+            for(int i=0;i<100;i++) {
+                exportDMWord(wordMLPackage);
+                GeneWordReport.addPageBreak(wordMLPackage, factory, STBrType.PAGE);
+                System.out.println("Done"+i);
             }
+            wordMLPackage.save(new java.io.File("/Users/wangshuo/geneWork/expFile/HelloWord2.docx"));
         } catch (Exception e) {
             e.printStackTrace();
         }
+
+
+//            wordMLPackage.getMainDocumentPart().addStyledParagraphOfText("Title",
+//                    "Hello World! This title is now in Arial.");
+//            wordMLPackage.getMainDocumentPart().addStyledParagraphOfText("Subtitle",
+//                    "Subtitle, this subtitle is now Arial too");
+
+//            wordMLPackage.getMainDocumentPart().addStyledParagraphOfText("Heading2",
+//                    "Heading2 is now Arial, no longer bold and has an underline " +
+//                            "and fontsize 12");
+//            wordMLPackage.getMainDocumentPart().addStyledParagraphOfText("Heading3",
+//                    "Heading3 is now Arial");
+//            wordMLPackage.getMainDocumentPart().addStyledParagraphOfText("Normal",
+//                    "And normal text has changed to Arial and fontsize 10");
+
+//            wordMLPackage = WordprocessingMLPackage.createPackage();
+//            wordMLPackage.getMainDocumentPart().addParagraphOfText("Hello Wordssss!");
+
+    }
+
+    private static void exportDMWord(WordprocessingMLPackage wordMLPackage) throws Exception {
+
+
+
+        wordMLPackage.getMainDocumentPart().addStyledParagraphOfText("Heading1",
+                "s2237892\n");
+
+        File file = new File("/Users/wangshuo/geneWork/expFile/test.png");
+        byte[] bytes = GeneWordReport.convertImageToByteArray(file);
+        GeneWordReport.addImageToPackage(wordMLPackage, bytes);
+
+
+        wordMLPackage.getMainDocumentPart().addStyledParagraphOfText("Heading2",
+                "基因\n");
+        wordMLPackage.getMainDocumentPart().addStyledParagraphOfText("Normal",
+                "KCNQ1\n");
+
+
+        wordMLPackage.getMainDocumentPart().addStyledParagraphOfText("Heading2",
+                "用户基因型\n");
+        wordMLPackage.getMainDocumentPart().addStyledParagraphOfText("Normal",
+                "CC\n");
+
+
+        wordMLPackage.getMainDocumentPart().addStyledParagraphOfText("Heading2",
+                "风险型\n");
+        wordMLPackage.getMainDocumentPart().addStyledParagraphOfText("Normal",
+                "C型风险系数1.4X\n");
+
+
+        wordMLPackage.getMainDocumentPart().addStyledParagraphOfText("Heading2",
+                "相关途径\n");
+        wordMLPackage.getMainDocumentPart().addStyledParagraphOfText("Normal",
+                "同胰岛素敏感相关\n");
+
+
+        wordMLPackage.getMainDocumentPart().addStyledParagraphOfText("Heading2",
+                "机理阐述\n");
+        wordMLPackage.getMainDocumentPart().addStyledParagraphOfText("Normal",
+                "C风险型，会造成餐后血糖升高较多，原因推测是beta细胞功能不强，胰岛素释放不好，但是并无结果表明会引起的胰岛素分泌失常风险。而且这类人员由于体重上升引起糖尿病的风险更大。这个基因是钾离子通道，如果这个有问题，注意在使用钾离子通道抑制剂降压药的时候要注意。同时要注意有没有心脏问题，主要是long QT(QT间期延长综合症)。\n");
+
+
+        wordMLPackage.getMainDocumentPart().addStyledParagraphOfText("Heading2",
+                "健康建议\n");
+        wordMLPackage.getMainDocumentPart().addStyledParagraphOfText("Normal",
+                "1，建议控制体重\n" +
+                        "2，注意控制血压\n");
+
+        wordMLPackage.getMainDocumentPart().addStyledParagraphOfText("Heading2",
+                "用药建议\n");
+        wordMLPackage.getMainDocumentPart().addStyledParagraphOfText("Normal",
+                "1，格列美脲，通过作用于胰岛B细胞上的受体，促进胰岛素分泌，从而起到降血糖作用。格列美脲（亚莫利）是新型第三代磺脲类降糖药，该药除具有刺激胰岛素分泌作用外，独立于胰岛素的胰外作用是格列美脲独特的药理作用方式，如促进肌肉组织对外周葡萄糖的摄取，减少肝脏内源性葡萄糖的产生等。\n" +
+                        "2，经多项研究表明瑞格列奈对此类基因功能不强造成的胰岛素释放能力弱有着很好的疗效，用格列奈还可以恢复胰岛素脉冲式分泌，并在一定程度上改善胰岛素敏感性。鉴于瑞格列奈具有葡萄糖浓度依赖性地促进胰岛素分泌，尤其是特异性地促进早相胰岛素分泌的能力，故可以使胰岛素分泌峰值与餐后血糖升高的峰值更加协调。\n");
+
+
     }
 
     /**
@@ -97,7 +180,7 @@ public class ExcelReadHelper {
      * &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;excel：编号    姓名         年龄       性别<br>
      * properties：id  name  age  sex<br>
      *
-     * @param file       待解析的Excel文件的路径
+     * @param filePath   待解析的Excel文件的路径
      * @param properties 与Excel相对应的属性
      * @param obj        反射对象的Class
      * @return
@@ -119,7 +202,7 @@ public class ExcelReadHelper {
      *
      * @param book       WorkBook对象，他代表了待将解析的Excel文件
      * @param properties 需要参考Object的属性
-     * @param object     构建的Object对象，每一个row都相当于一个object对象
+     * @param obj        构建的Object对象，每一个row都相当于一个object对象
      * @return
      * @throws Exception
      * @autor:chenssy
