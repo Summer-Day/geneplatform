@@ -10,7 +10,6 @@ import com.thinkgem.jeesite.modules.dm.entity.dmloci.GeneDmLoci;
 import com.thinkgem.jeesite.modules.dm.service.createWordFile.GeneDmCreateWordFileService;
 import com.thinkgem.jeesite.modules.dm.service.dmbasegene.GeneDmBaseGeneService;
 import com.thinkgem.jeesite.modules.dm.service.dmloci.GeneDmLociService;
-import org.apache.http.HttpResponse;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.docx4j.jaxb.Context;
 import org.docx4j.openpackaging.packages.WordprocessingMLPackage;
